@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI Search</title>
+</head>
+<body>
+    <h1>OpenAI Search</h1>
+    <form id="searchForm">
+        <label for="searchInput">Search:</label>
+        <input type="text" id="searchInput" name="searchInput">
+        <button type="button" onclick="performSearch()">Submit</button>
+    </form>
+    <div id="searchResults"></div>
+
+    <script>
+        function performSearch() {
+            var searchQuery = document.getElementById('searchInput').value;
+
+            // Replace 'YOUR_API_KEY' with your actual OpenAI API key
+            var apiKey = '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';
+            var apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+            var prompt = `Search for information about ${searchQuery}.`;
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    prompt: prompt,
+                    max_tokens: 150
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data.choices[0].text);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function displayResults(results) {
+            var resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '<h2>Search Results:</h2><p>' + results + '</p>';
+        }
+    </script>
+</body>
+</html>
